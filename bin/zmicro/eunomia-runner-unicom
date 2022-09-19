@@ -1,0 +1,17 @@
+#!/bin/bash
+
+help() {
+  echo "Usage:"
+  echo "  zmicro eunomia-runner-unicom <args ...>"
+  echo ""
+}
+
+core() {
+  eunomia-runner-unicom "$@"
+}
+
+run() {
+  core "$@"
+}
+
+run "$@"

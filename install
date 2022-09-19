@@ -1,0 +1,47 @@
+#!/bin/bash
+
+set -e
+
+help() {
+  echo "Usage:"
+  echo "  zmicro package install eunomia-runner-unicom <args...>"
+  echo ""
+}
+
+install() {
+  local arch="$(os::arch)"
+  local os="linux"
+  local bin_path=/usr/bin
+
+  if [ "$(os::is_macos)" = "true" ]; then
+    os="darwin"
+    bin_path=/usr/local/bin
+  fi
+
+  local tmp_file=/tmp/eunomia-runner-unicom.tar.gz
+  local url="http://10.27.249.150:8888/eunomia/shared/raw/master/eunomia-runner-unicom/eunomia-runner-unicom-${os}-${arch}.tgz"
+  curl -fSL $url -o $tmp_file
+
+  cd /tmp
+  tar -zxvf $tmp_file >>/dev/null 2>&1
+
+  sudo mv bin/eunomia-runner-unicom $bin_path
+
+  rm -rf $tmp_file
+}
+
+core() {
+  if [ "$1" = "-h" ] || [ "$1" = "--help" ]; then
+    help
+    exit 0
+  fi
+
+  install
+  log::success "install eunomia-runner-unicom success."
+}
+
+run() {
+  core $@
+}
+
+run $@
