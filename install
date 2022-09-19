@@ -18,14 +18,16 @@ install() {
     bin_path=/usr/local/bin
   fi
 
-  local tmp_file=/tmp/eunomia-runner-unicom.tar.gz
-  local url="http://10.27.249.150:8888/eunomia/shared/raw/master/eunomia-runner-unicom/eunomia-runner-unicom-${os}-${arch}.tgz"
+  local name="eunomia-runner-unicom"
+
+  local tmp_file=/tmp/$name.tar.gz
+  local url="http://10.27.249.150:8888/eunomia/shared/raw/master/$name/$name-${os}-${arch}.tgz"
   curl -fSL $url -o $tmp_file
 
   cd /tmp
   tar -zxvf $tmp_file >>/dev/null 2>&1
 
-  sudo mv bin/eunomia-runner-unicom-${os}-${arch} $bin_path
+  sudo mv bin/$name-${os}-${arch} $bin_path/$name
 
   rm -rf $tmp_file
 }
