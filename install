@@ -1,35 +1,9 @@
 #!/bin/bash
 
-set -e
-
 help() {
   echo "Usage:"
-  echo "  zmicro package install eunomia-runner-unicom <args...>"
+  echo "  zmicro package install ${PACKAGE_NAME} <args...>"
   echo ""
-}
-
-install() {
-  local arch="$(os::arch)"
-  local os="linux"
-  local bin_path=/usr/bin
-
-  if [ "$(os::is_macos)" = "true" ]; then
-    os="darwin"
-    bin_path=/usr/local/bin
-  fi
-
-  local name="eunomia-runner-unicom"
-
-  local tmp_file=/tmp/$name.tar.gz
-  local url="http://10.27.249.150:8888/eunomia/shared/raw/master/$name/$name-${os}-${arch}.tgz"
-  os::curl -fSL $url -o $tmp_file
-
-  cd /tmp
-  tar -zxvf $tmp_file >>/dev/null 2>&1
-
-  sudo mv bin/$name-${os}-${arch} $bin_path/$name
-
-  rm -rf $tmp_file
 }
 
 core() {
@@ -39,11 +13,28 @@ core() {
   fi
 
   install
-  log::success "install eunomia-runner-unicom success."
+  if [ $? -eq 0 ]; then
+    log::success "install ${PACKAGE_NAME} success."
+    exit 0
+  else
+    log::error "install ${PACKAGE_NAME} failed."
+    exit 1
+  fi
 }
 
 run() {
-  core $@
+  core "$@"
 }
 
-run $@
+if [ "$1" = "ONE_LINE" ]; then
+  command -v zmicro >>/dev/null 2>&1
+  if [ $? -ne 0 ]; then
+    curl -o- https://raw.githubusercontent.com/zcorky/zmicro/master/install | sh
+  fi
+
+  zmicro package install eunomia-runner-unicom
+else
+  set -e
+  
+  run "$@"
+fi
