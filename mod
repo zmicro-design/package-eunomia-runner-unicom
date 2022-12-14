@@ -1,2 +1,2 @@
-VERSION=v1.0.2
+VERSION=v1.2.0
 DESCRIPTION="Package Eunomia-Runner-Unicom - A component of Eunomia"
